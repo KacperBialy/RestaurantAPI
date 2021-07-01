@@ -1,0 +1,63 @@
+Symulacja i Wizualizacja
+
+Do wcześniej wyprowadzonych wzorów na równania stanu zostały podstawione rzeczywiste wartości naszej kostki, dzięki czemu możliwa była analiza układu.
+
+Po wyliczeniu wartośći własnych z macierzy procesu, okazało się, że część z nich posiada dodatnie wartości, co świadczyło o tym, że układ jest niestabilny. 
+
+Należało więc zastosować metodę, która wprowadzi go w stan stabilności. Wybraliśmy metodę lokowania biegunów.
+
+w celu dobrania jak najlepszych dla nas wartości zostały przeprowadzone testy,
+
+polegające na zadaniu początkowego wychyleniu ramy i obserwowania zachowania wyjść układu.
+
+Obserwowane wyjścia to prędkość koła i nachylenie ramy, gdzie 0 oznacza punkt równowagi. W naszym przypadku zależało nam na jak najmniesjzym
+
+przyspieszeniu koła, w celu dobrania silnika z jak najmniejszym momentem obrtowym. Więc wybraliśmy przebieg zielony.
+
+Do graficznej interpretacji wyników, została stworzona wizualizacja przy wykorzystaniu biblioteki V-Realm Builder,
+
+pokazująca zachowanie symulowanego układu.
+
+
+APLIKACJA
+
+W celu dostarczenia wygodnego sterwoania kostką została stworzona aplikacja desktopowa,
+
+zapewniająca wysyłanie komunikatów sterujących i odczytywanie wartości z czujników mikrokontrolera.
+
+Została ona stworzona przy użyciu frameworku Windows Presentation Foundation, z wykorzystaniem języka C#.
+
+
+Aplikacja umożliwiała użytkownikowi konfigurację komunikacji UART przy użyciu przełączalnych guzików, widocznych na górze. 
+
+Gdy konfiguracja została ukończona, należy nacisnąć guzik connect, po którym zostanie zwrócony komunikat o poprawności połączenia.
+
+W celu uniknięcia połączenia się z nieodpowiednim portem, został przeprowadzona autorska weryfikacja, polegająca na wysłaniu do 
+
+urządzenia znaku "1" i czekanie na komunikat zwrotny. Jako, że nasz mikrokontroler po otrzymu znaku "1", odsyła komunikat "OK",
+
+mamy pewność, że jeżeli komunikat został zwrócony to połączenie przebiegło pomyślnie.
+
+
+Pokazane okno zapewnia również manualne wysyłanie wiadomości do mikrokontolera, jak i odczytywanie wiadomości otrzymywanech od niego.
+
+
+Jako, że od mikrokontrolera otrzymujemy 24 wartości typu float, co odpowiada wartością z 3 czujników, zostały stworzone 3 wykresy,
+
+przedstawiające otrzymane dane. Ostatecznie korzystaliśmy z 1 czujnika, ale 3 wykresy zostały w celu późniejszej rozbudowy, przez co dane są zduplikowane.
+
+Przy użyciu guzików widocznych u góry aplikacji, można odznczaczać syngały, których aktualnie nie chcemy obserwować, w celu lepszej analizy.
+
+
+Do sterwoania zostało stworzone okno zapewniające zadawanie komunikatów sterujących przy użyciu panelu z guzikami,
+
+pod którymi kryją się funkcje wysyłające komunikaty sterujące do mikrokontrolera. Przedstawiony po prawej stronie szesześcian, pokazuje pozycję,
+
+w której powinna się znaleźć kostka po naciśnieciu odpowiedniego guzika.
+
+ 
+
+
+
+
+
