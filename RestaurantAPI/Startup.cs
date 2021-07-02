@@ -17,6 +17,7 @@ using RestaurantAPI.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Swagger;
 
 namespace RestaurantAPI
 {
@@ -77,7 +78,10 @@ namespace RestaurantAPI
             services.AddScoped<IValidator<RestaurantQuery>,RestaurantQueryValidator>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddHttpContextAccessor();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.OperationFilter<SwaggerFileOperationFilter>();
+            });
 
             services.AddCors(options =>
             {
@@ -120,7 +124,6 @@ namespace RestaurantAPI
             app.UseRouting();
 
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

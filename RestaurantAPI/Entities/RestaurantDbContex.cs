@@ -8,7 +8,6 @@ namespace RestaurantAPI.Entities
         {
 
         }
-        private string _connectionString = @"Server=DESKTOP-RLQCKGK;Database=RestaurantDB;Trusted_Connection=True";
         public DbSet<Restaurant> Restaurant { get; set; }
         public DbSet<Addres> Adresses { get; set; }
         public DbSet<Dish> Dishes { get; set; }
