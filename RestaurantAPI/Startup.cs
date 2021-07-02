@@ -1,23 +1,23 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using RestaurantAPI.Authorization;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Middleware;
-using RestaurantAPI.Services;
-using Microsoft.AspNetCore.Identity;
-using FluentValidation;
 using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
-using FluentValidation.AspNetCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using RestaurantAPI.Authorization;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Services;
 using RestaurantAPI.Swagger;
+using System.Text;
 
 namespace RestaurantAPI
 {
@@ -33,7 +33,7 @@ namespace RestaurantAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var authenticationSettings = new AuthenticationSettings();
+            AuthenticationSettings authenticationSettings = new AuthenticationSettings();
             Configuration.GetSection("Authentication").Bind(authenticationSettings);
 
             services.AddSingleton(authenticationSettings);
@@ -56,7 +56,7 @@ namespace RestaurantAPI
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality","Poland"));
+                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "Poland"));
                 options.AddPolicy("Atleast20", builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
                 options.AddPolicy("CreatedAtLeast2Restaurants", builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
             }
@@ -75,12 +75,14 @@ namespace RestaurantAPI
             services.AddScoped<IDishService, DishService>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
-            services.AddScoped<IValidator<RestaurantQuery>,RestaurantQueryValidator>();
+            services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen(c =>
             {
                 c.OperationFilter<SwaggerFileOperationFilter>();
+                c.AddSecurityDefinition("Bearer", SwaggerConfiguration.GetOpenApiBearerSecurityScheme());
+                c.AddSecurityRequirement(SwaggerConfiguration.GetOpenApiBearerSecurityRequirement());
             });
 
             services.AddCors(options =>
@@ -92,7 +94,7 @@ namespace RestaurantAPI
                              .WithOrigins(Configuration["AllowedOrigins"]);
                  });
             });
-            services.AddDbContext<RestaurantDbContex>(options=>options.UseSqlServer(Configuration.GetConnectionString("RestaurantDbConnection")));
+            services.AddDbContext<RestaurantDbContex>(options => options.UseSqlServer(Configuration.GetConnectionString("RestaurantDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
