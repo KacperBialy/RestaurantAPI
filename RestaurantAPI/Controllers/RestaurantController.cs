@@ -35,7 +35,7 @@ namespace RestaurantAPI.Controllers
             return NoContent();
         }
         [HttpPost]
-        //[Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
             var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
@@ -44,8 +44,6 @@ namespace RestaurantAPI.Controllers
             return Created($"/api/restaurant/{id}", null);
         }
         [HttpGet]
-        //[Authorize(Policy = "Atleast20")]
-        //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
         public ActionResult<IEnumerable<Restaurant>> GetAll([FromQuery] RestaurantQuery query)
         {
             var restaurantsDtos = _restaurantService.GetAll(query);

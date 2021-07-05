@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RestaurantAPI.Controllers
 {
@@ -19,16 +15,17 @@ namespace RestaurantAPI.Controllers
             _accountService = accountService;
         }
         [HttpPost("register")]
-        public ActionResult RegisterUser([FromBody]RegisterUserDto dto)
+        public ActionResult RegisterUser([FromBody] RegisterUserDto dto)
         {
             _accountService.RegisterUser(dto);
             return Ok();
         }
         [HttpPost("login")]
-        public ActionResult Login([FromBody]LoginDto dto)
+        public ActionResult Login([FromBody] LoginDto dto)
         {
             string token = _accountService.GenerateJwt(dto);
-            return Ok(token);
+            string jsonToken = "{\"Bearer\": \"" + token + "\"}";
+            return Ok(jsonToken);
         }
     }
 }
